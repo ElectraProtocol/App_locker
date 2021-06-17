@@ -44,9 +44,7 @@ void AppLocker::setLock()
 {
     switch (ui->stackedWidget->currentIndex()) {
     case 0:
-        qInfo() << hashLocker.toHex();
-        qInfo() << QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha3_256, ui->unlockLineEdit->text().toLocal8Bit(), QString::number(salt).toLocal8Bit(), 10000, quint64(1000)).toHex();
-        if(QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha3_256, ui->unlockLineEdit->text().toLocal8Bit(), QString::number(salt).toLocal8Bit(), 10000, quint64(1000)) == hashLocker){
+        if(QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha256, ui->unlockLineEdit->text().toUtf8(), QString::number(salt).toLocal8Bit(), 10000, quint64(1000)) == hashLocker){
             walletLocked = false;
             hashLocker.clear();
             salt = 0;
@@ -71,7 +69,7 @@ void AppLocker::setLock()
             return;
         }else{
             walletLocked = true;
-            hashLocker = QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha3_256, ui->pinLineEdit->text().toLocal8Bit(), QString::number(salt).toLocal8Bit(), 10000, quint64(1000));
+            hashLocker = QPasswordDigestor::deriveKeyPbkdf2(QCryptographicHash::Sha256, ui->pinLineEdit->text().toUtf8(), QString::number(salt).toLocal8Bit(), 10000, quint64(1000));
             ui->pinLineEdit->clear();
             ui->confirmLineEdit->clear();
             ui->stackedWidget->setCurrentIndex(0); // move to unlock view
