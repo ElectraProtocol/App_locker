@@ -31,7 +31,7 @@ public:
 
 private:
     Ui::AppLocker *ui;
-    quint32 salt = 0;
+    qint64 salt = 0;
     QByteArray hashLocker;
     bool walletLocked = false;
     void setLock();

@@ -18,7 +18,7 @@ AppLocker::AppLocker(QWidget *parent)
     ui->stackedWidget->setCurrentIndex(1);
     ui->headLabel->setText(tr("Set a PIN code to lock your wallet:\n"));
     ui->messageLabel->setText(tr("\n- PIN code should be at least a 6 digit number.\n- PIN is only valid for this session"));
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setText("Lock");
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Lock"));
     ui->pinLineEdit->setValidator(validatorInt);
     ui->pinLineEdit->setEchoMode(QLineEdit::Password);
     ui->confirmLineEdit->setValidator(validatorInt);
@@ -61,7 +61,7 @@ void AppLocker::setLock()
         if(ui->pinLineEdit->text().isEmpty() || ui->confirmLineEdit->text().isEmpty()){
             QMessageBox::information(this, tr("Empty field"), tr("Please enter and confirm your pin code"), QMessageBox::Ok);
             return;
-        }else if(ui->pinLineEdit->text().size() < 5){
+        }else if(ui->pinLineEdit->text().size() < 6){
             QMessageBox::information(this, tr("Error"), tr("PIN code must be at least 6 digits long"), QMessageBox::Ok);
             return;
         }else if(ui->pinLineEdit->text() != ui->confirmLineEdit->text()){
