@@ -37,8 +37,8 @@ private:
     void setLock();
 
 Q_SIGNALS:
-    void quitAppFromWalletLocker();
-    void lockingApp(bool);
+    void quitAppFromWalletLocker(); // To close the application in case of unauthorized behavior
+    void lockingApp(bool); // To manage application behavior when it goes to locked or unlocked mode
 
 public Q_SLOTS:
     void showLocker();

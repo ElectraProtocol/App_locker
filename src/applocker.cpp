@@ -88,7 +88,7 @@ void AppLocker::setLock()
 
 void AppLocker::showLocker()
 {
-    this->move(QApplication::desktop()->screen()->rect().center() - this->rect().center());
+    this->move(QApplication::desktop()->screen()->rect().center() - this->rect().center()); // move the appLocker to the center of the screen
     this->show();
 }
 
