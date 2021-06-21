@@ -19,6 +19,7 @@ AppLocker::AppLocker(QWidget *parent)
     ui->headLabel->setText(tr("Set a PIN code to lock your wallet:\n"));
     ui->messageLabel->setText(tr("\n- PIN code should be at least a 6 digit number.\n- PIN is only valid for this session"));
     ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Lock"));
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setShortcut(Qt::Key_Enter);
     ui->pinLineEdit->setValidator(validatorInt);
     ui->pinLineEdit->setEchoMode(QLineEdit::Password);
     ui->confirmLineEdit->setValidator(validatorInt);
@@ -30,7 +31,8 @@ AppLocker::AppLocker(QWidget *parent)
     ui->unlockLineEdit->setValidator(validatorInt);
     ui->unlockLineEdit->setEchoMode(QLineEdit::Password);
 
-    connect(ui->unlockLineEdit, &QLineEdit::textChanged, [this]{if(ui->unlockLineEdit->text().size() > 5) ui->buttonBox->setEnabled(true);});
+    connect(ui->unlockLineEdit, &QLineEdit::textChanged, [this]{if(ui->unlockLineEdit->text().size() > 5) ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+                                                                else if(ui->stackedWidget->currentIndex() == 0) ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);});
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &AppLocker::setLock);
     connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &AppLocker::close);
 }
@@ -52,6 +54,8 @@ void AppLocker::setLock()
             ui->unlockLineEdit->clear();
             ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Lock"));
             ui->buttonBox->button(QDialogButtonBox::Cancel)->setVisible(true);
+            ui->unlockLineEdit->clear();
+            Q_EMIT lockingApp(false);
         }else{
             QMessageBox::warning(this, tr("Error"), tr("PIN code is not correct"), QMessageBox::Ok);
         }
@@ -74,8 +78,8 @@ void AppLocker::setLock()
             ui->confirmLineEdit->clear();
             ui->stackedWidget->setCurrentIndex(0); // move to unlock view
             ui->buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Unlock"));
+            ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
             ui->buttonBox->button(QDialogButtonBox::Cancel)->setVisible(false);
-            ui->buttonBox->setEnabled(false);
             ui->unlockLineEdit->setFocus();
         }
         break;
@@ -99,6 +103,9 @@ void AppLocker::closeEvent(QCloseEvent *event)
             event->accept();
         }
     }else if(ui->stackedWidget->currentIndex() == 1){
+        ui->unlockLineEdit->clear();
+        ui->pinLineEdit->clear();
+        ui->confirmLineEdit->clear();
         event->accept();
     }else{
         event->ignore();
